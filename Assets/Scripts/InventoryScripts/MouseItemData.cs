@@ -23,9 +23,4 @@ public class MouseItemData : MonoBehaviour
         ItemCount.text = invSlot.StackSize.ToString();
         ItemSprite.color = Color.white;
     }
-
-    private void TestMethod()
-    {
-
-    }
 }
