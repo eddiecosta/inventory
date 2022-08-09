@@ -24,8 +24,8 @@ public class MouseItemData : MonoBehaviour
         ItemSprite.color = Color.white;
     }
 
-    public void DoSomething()
+    private void TestMethod()
     {
-        //blablablaß
+
     }
 }
