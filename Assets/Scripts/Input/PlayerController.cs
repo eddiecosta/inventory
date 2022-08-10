@@ -20,9 +20,6 @@ public class PlayerController : MonoBehaviour
 
     private float _rotationDuration = 0.15f;
     private float _rotationVel;
-    //private float heightOffset = 0.25f;
-    //private float groundedHeight = 0.5f;
-    //public LayerMask groundLayer;
 
     void Start()
     {
@@ -38,7 +35,7 @@ public class PlayerController : MonoBehaviour
         // PlayerMovement action
         MovementInputHandler();
 
-        isCheckAim = mousePOS.isAiming;
+        //isCheckAim = mousePOS.isAiming;
 
         Vector3 moveInput = new Vector3(h, 0f, v).normalized;
 
