@@ -9,7 +9,7 @@ public class InventorySlot
     [SerializeField] private InventoryItemData itemData;
     [SerializeField] private int stackSize;
 
-    public InventoryItemData Data => itemData;
+    public InventoryItemData ItemData => itemData;
     public int StackSize => stackSize;
 
     public InventorySlot(InventoryItemData source, int amount)
@@ -31,7 +31,10 @@ public class InventorySlot
 
     public void AssignItem(InventorySlot invSlot)
     {
-        if (itemData == invSlot.itemData) AddToStack(invSlot.stackSize);
+        if (itemData == invSlot.ItemData)
+        {
+            AddToStack(invSlot.stackSize);
+        } 
         else
         {
             itemData = invSlot.itemData;

@@ -50,7 +50,7 @@ public class InventorySystem
 
     public bool ContainsItem(InventoryItemData itemToAdd, out List<InventorySlot> invSlot)
     {
-        invSlot = InventorySlots.Where(i => i.Data == itemToAdd).ToList();
+        invSlot = InventorySlots.Where(i => i.ItemData == itemToAdd).ToList();
         Debug.Log(invSlot.Count);
         //inventorySlots.First(slot => slot.Data.MaxStackSize > 5);
         return invSlot == null ? false : true;
@@ -58,7 +58,7 @@ public class InventorySystem
 
     public bool HasFreeSlot(out InventorySlot freeSlot)
     {
-        freeSlot = inventorySlots.FirstOrDefault(i => i.Data == null);
+        freeSlot = inventorySlots.FirstOrDefault(i => i.ItemData == null);
         return freeSlot == null ? false : true;
     }
 }

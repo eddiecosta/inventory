@@ -31,9 +31,9 @@ public class InventorySlot_UI : MonoBehaviour
 
     public void UpdateUISlot(InventorySlot slot)
     {
-        if(slot.Data != null)
+        if(slot.ItemData != null)
         {
-            itemSprite.sprite = slot.Data.Icon;
+            itemSprite.sprite = slot.ItemData.Icon;
             itemSprite.color = Color.white;
 
             if (slot.StackSize > 1) itemCount.text = slot.StackSize.ToString();
