@@ -11,6 +11,8 @@ public class MouseItemData : MonoBehaviour
 public TextMeshProUGUI ItemCount { get; private set; }
     public InventorySlot AssignedInventorySlot { get; private set; }
 
+    private MousePOS MousePOS;
+
     private void Awake()
     {
         ItemSprite.color = Color.clear;
@@ -42,14 +44,5 @@ public TextMeshProUGUI ItemCount { get; private set; }
         ItemSprite.sprite = invSlot.ItemData.Icon;
         ItemCount.text = invSlot.StackSize.ToString();
         ItemSprite.color = Color.white;
-    }
-
-    public static bool IsPointerOverUIObject()
-    {
-        PointerEventData eventDataCurrentPosition = new PointerEventData(EventSystem.current);
-        eventDataCurrentPosition.position = Mouse.current.position.ReadValue();
-        List<RaycastResult> results = new List<RaycastResult>();
-        EventSystem.current.RaycastAll(eventDataCurrentPosition, results);
-        return results.Count > 0;
     }
 }
