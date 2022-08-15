@@ -7,14 +7,14 @@ using System.Linq;
 [System.Serializable]
 public class InventorySystem
 {
-    [SerializeField] private List<InventorySlot> inventorySlots;
+    [SerializeField] private List<InventorySlot> inventorySlots; 
 
     public List<InventorySlot> InventorySlots => inventorySlots;
     public int InventorySize => InventorySlots.Count;
 
     public UnityAction<InventorySlot> OnInventorySlotChange;
 
-    public InventorySystem(int size)
+    public InventorySystem(int size) // Constructor that sets the amount of slots
     {
         inventorySlots = new List<InventorySlot>(size);
 
@@ -41,9 +41,15 @@ public class InventorySystem
 
         if (HasFreeSlot(out InventorySlot freeSlot)) // Get the first available slot
         {
-            freeSlot.UpdateInventorySlot(itemToAdd, amountToAdd);
-            OnInventorySlotChange?.Invoke(freeSlot);
-            return true;
+            if (freeSlot.RoomLeftInStack(amountToAdd))
+            {
+                freeSlot.UpdateInventorySlot(itemToAdd, amountToAdd);
+                OnInventorySlotChange?.Invoke(freeSlot);
+                return true;
+            }
+
+            // Add implementation to only take what can fill the stack, and check for another free slot to put the remainder in.
+
         }
         return false;
     }

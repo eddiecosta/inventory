@@ -7,9 +7,9 @@ using TMPro;
 
 public class MouseItemData : MonoBehaviour
 {
-    public Image ItemSprite;
-    public TextMeshProUGUI ItemCount;
-    public InventorySlot AssignedInventorySlot;
+    public Image ItemSprite { get; private set; }
+public TextMeshProUGUI ItemCount { get; private set; }
+    public InventorySlot AssignedInventorySlot { get; private set; }
 
     private void Awake()
     {
@@ -19,7 +19,7 @@ public class MouseItemData : MonoBehaviour
 
     private void Update()
     {
-        if (AssignedInventorySlot.ItemData != null)
+        if (AssignedInventorySlot.ItemData != null) // if has item, follow mouse position
         {
             transform.position = Mouse.current.position.ReadValue();
 

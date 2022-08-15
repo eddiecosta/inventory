@@ -16,4 +16,5 @@ MonoBehaviour:
   DisplayName: Potato
   Description: A potato
   Icon: {fileID: -2076399917, guid: 5f24c48bd00444302a71f551a58d0229, type: 3}
-  MaxStackSize: 10
+  MaxStackSize: 4
+  Value: 0

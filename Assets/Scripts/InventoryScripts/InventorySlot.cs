@@ -6,24 +6,24 @@ using UnityEngine;
 
 public class InventorySlot
 {
-    [SerializeField] private InventoryItemData itemData;
-    [SerializeField] private int stackSize;
+    [SerializeField] private InventoryItemData itemData; // Reference to the data
+    [SerializeField] private int stackSize; // Current stack size
 
     public InventoryItemData ItemData => itemData;
     public int StackSize => stackSize;
 
-    public InventorySlot(InventoryItemData source, int amount)
+    public InventorySlot(InventoryItemData source, int amount) // Constructor to make a occupied inventory slot
     {
         itemData = source;
         stackSize = amount;
     }
 
-    public InventorySlot()
+    public InventorySlot() // Constructor to make an empty inventory slot
     {
         ClearSlot();
     }
 
-    public void ClearSlot()
+    public void ClearSlot() // clears slots
     {
         itemData = null;
         stackSize = -1;
@@ -49,7 +49,7 @@ public class InventorySlot
         stackSize = amount;
     }
 
-    public bool RoomLeftInStack(int amountToAdd, out int amountRemaining)
+    public bool RoomLeftInStack(int amountToAdd, out int amountRemaining) // Would there be enough room in the stack
     {
         amountRemaining = itemData.MaxStackSize - stackSize;
 
@@ -58,7 +58,7 @@ public class InventorySlot
 
     public bool RoomLeftInStack(int amountToAdd)
     {
-        if (stackSize + amountToAdd <= itemData.MaxStackSize) return true;
+        if (itemData != null || stackSize + amountToAdd <= itemData.MaxStackSize) return true;
         else return false;
     }
 
@@ -74,7 +74,7 @@ public class InventorySlot
 
     public bool SplitStack(out InventorySlot splitStack)
     {
-        if (StackSize <= 1)
+        if (StackSize <= 1) // Is there enough to actually split. If not, return false.
         {
             splitStack = null;
             return false;
