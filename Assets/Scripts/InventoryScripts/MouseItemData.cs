@@ -10,6 +10,8 @@ public class MouseItemData : MonoBehaviour
     public TextMeshProUGUI ItemCount;
     public InventorySlot AssignedInventorySlot;
 
+    private MousePOS MousePOS;
+
     private void Awake()
     {
         ItemSprite.color = Color.clear;
@@ -22,5 +24,13 @@ public class MouseItemData : MonoBehaviour
         ItemSprite.sprite = invSlot.Data.Icon;
         ItemCount.text = invSlot.StackSize.ToString();
         ItemSprite.color = Color.white;
+    }
+
+    private void Update()
+    {
+        if (AssignedInventorySlot.Data != null)
+        {
+
+        }
     }
 }

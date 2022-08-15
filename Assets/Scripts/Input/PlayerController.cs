@@ -29,8 +29,8 @@ public class PlayerController : MonoBehaviour
         _controller = GetComponent<CharacterController>();
         mousePOS = GetComponent<MousePOS>();
         isCheckAim = mousePOS.isAiming;
-        Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Confined;
+        //Cursor.visible = false;
+        //Cursor.lockState = CursorLockMode.Confined;
     }
 
     void Update()

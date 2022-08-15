@@ -14,6 +14,8 @@ public class MousePOS : MonoBehaviour
     public GameObject FirePoint;
     public bool isAiming = false;
 
+    //public Vector2 MouseVectorValue;
+
     private void Start()
     {
         cam = Camera.main;
@@ -41,6 +43,7 @@ public class MousePOS : MonoBehaviour
     private void TargetMousePos()
     {
         Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+
         RaycastHit hit;
 
         if (Physics.Raycast(ray, out hit))
