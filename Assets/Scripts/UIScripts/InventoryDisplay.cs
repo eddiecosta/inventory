@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.InputSystem;
 
 public abstract class InventoryDisplay : MonoBehaviour
 {
@@ -33,15 +34,25 @@ public abstract class InventoryDisplay : MonoBehaviour
 
     public void SlotClicked(InventorySlot_UI clickedUISlot)
     {
+        bool isShiftPressed = Keyboard.current.leftShiftKey.isPressed;
+
         // Clicked slot HAS an item and mouse DOESNT item, pick up item
         if (clickedUISlot.AssignedInventorySlot.ItemData != null 
             && mouseInventoryItem.AssignedInventorySlot.ItemData == null)
         {
             // Shift  + Click -> split stack
-
-            mouseInventoryItem.UpdateMouseSlot(clickedUISlot.AssignedInventorySlot);
-            clickedUISlot.ClearSlot();
-            return;
+            if (isShiftPressed && clickedUISlot.AssignedInventorySlot.SplitStack(out InventorySlot halfStackSlot))
+            {
+                mouseInventoryItem.UpdateMouseSlot(halfStackSlot);
+                clickedUISlot.UpdateUISlot();
+                return;
+            }
+            else
+            {
+                mouseInventoryItem.UpdateMouseSlot(clickedUISlot.AssignedInventorySlot);
+                clickedUISlot.ClearSlot();
+                return;
+            }
         }
 
         // Clicked slot doesn't have and item and mouse does, place item in empty slot
@@ -52,6 +63,7 @@ public abstract class InventoryDisplay : MonoBehaviour
             clickedUISlot.UpdateUISlot();
 
             mouseInventoryItem.ClearSlot();
+            return;
         }
 
         // Both slots have item, decide what to do
@@ -65,16 +77,29 @@ public abstract class InventoryDisplay : MonoBehaviour
                 clickedUISlot.UpdateUISlot();
 
                 mouseInventoryItem.ClearSlot();
+                return;
             }
 
-            else if(isSameItem && !clickedUISlot.AssignedInventorySlot.RoomLeftInStack(mouseInventoryItem.AssignedInventorySlot.StackSize, out int leftInStack)
+            else if(isSameItem && !clickedUISlot.AssignedInventorySlot.RoomLeftInStack(mouseInventoryItem.AssignedInventorySlot.StackSize, out int leftInStack))
             {
+                if (leftInStack < 1) SwapSlots(clickedUISlot);
+                else
+                {
+                    int remainingOnMouse = mouseInventoryItem.AssignedInventorySlot.StackSize - leftInStack;
+                    clickedUISlot.AssignedInventorySlot.AddToStack(leftInStack);
+                    clickedUISlot.UpdateUISlot();
 
+                    var newItem = new InventorySlot(mouseInventoryItem.AssignedInventorySlot.ItemData, remainingOnMouse);
+                    mouseInventoryItem.ClearSlot();
+                    mouseInventoryItem.UpdateMouseSlot(newItem);
+                    return;
+                }
             }
 
-            if (clickedUISlot.AssignedInventorySlot.ItemData != mouseInventoryItem.AssignedInventorySlot.ItemData)
+            else if (!isSameItem)
             {
                 SwapSlots(clickedUISlot);
+                return;
             }
         }
         // Both items are the same, combine
