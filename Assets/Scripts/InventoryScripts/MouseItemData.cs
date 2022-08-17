@@ -7,16 +7,23 @@ using TMPro;
 
 public class MouseItemData : MonoBehaviour
 {
-    public Image ItemSprite { get; private set; }
-public TextMeshProUGUI ItemCount { get; private set; }
-    public InventorySlot AssignedInventorySlot { get; private set; }
+    public Image ItemSprite;
+    public TextMeshProUGUI ItemCount;
+    public InventorySlot AssignedInventorySlot;
 
-    private MousePOS MousePOS;
+    //private MousePOS MousePOS;
 
     private void Awake()
     {
         ItemSprite.color = Color.clear;
         ItemCount.text = "";
+    }
+    public void UpdateMouseSlot(InventorySlot invSlot)
+    {
+        AssignedInventorySlot.AssignItem(invSlot);
+        ItemSprite.sprite = invSlot.ItemData.Icon;
+        ItemCount.text = invSlot.StackSize.ToString();
+        ItemSprite.color = Color.white;
     }
 
     private void Update()
@@ -31,19 +38,13 @@ public TextMeshProUGUI ItemCount { get; private set; }
             }
         }
     }
+
     public void ClearSlot()
     {
         AssignedInventorySlot.ClearSlot();
         ItemCount.text = "";
         ItemSprite.color = Color.clear;
         ItemSprite.sprite = null;
-    }
-    public void UpdateMouseSlot(InventorySlot invSlot)
-    {
-        AssignedInventorySlot.AssignItem(invSlot);
-        ItemSprite.sprite = invSlot.ItemData.Icon;
-        ItemCount.text = invSlot.StackSize.ToString();
-        ItemSprite.color = Color.white;
     }
 
     public static bool IsPointerOverUIObject()
