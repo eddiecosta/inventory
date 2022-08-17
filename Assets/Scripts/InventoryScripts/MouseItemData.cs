@@ -46,6 +46,7 @@ public class MouseItemData : MonoBehaviour
         ItemSprite.color = Color.clear;
         ItemSprite.sprite = null;
     }
+<<<<<<< HEAD
 
     public static bool IsPointerOverUIObject()
     {
@@ -54,5 +55,13 @@ public class MouseItemData : MonoBehaviour
         List<RaycastResult> results = new List<RaycastResult>();
         EventSystem.current.RaycastAll(eventDataCurrentPosition, results);
         return results.Count > 0;
+=======
+    public void UpdateMouseSlot(InventorySlot invSlot)
+    {
+        AssignedInventorySlot.AssignItem(invSlot);
+        ItemSprite.sprite = invSlot.ItemData.Icon;
+        ItemCount.text = invSlot.StackSize.ToString();
+        ItemSprite.color = Color.white;
+>>>>>>> parent of 3f65d1d (Update MouseItemData.cs)
     }
 }
