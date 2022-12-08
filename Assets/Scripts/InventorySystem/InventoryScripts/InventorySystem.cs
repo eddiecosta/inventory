@@ -51,7 +51,7 @@ public class InventorySystem
     public bool ContainsItem(InventoryItemData itemToAdd, out List<InventorySlot> invSlot)
     {
         invSlot = InventorySlots.Where(i => i.ItemData == itemToAdd).ToList();
-        Debug.Log(invSlot.Count);
+        //Debug.Log(invSlot.Count);
         //inventorySlots.First(slot => slot.Data.MaxStackSize > 5);
         return invSlot == null ? false : true;
     }
