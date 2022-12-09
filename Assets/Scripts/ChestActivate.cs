@@ -23,12 +23,22 @@ public class ChestActivate : MonoBehaviour
         col.isTrigger = true;
         isActive = false;
         Highlight.SetActive(false);
+
+    }
+
+    private void OnEnable()
+    {
+    }
+
+    private void OnDisable()
+    {
     }
 
     public void OnTriggerEnter(Collider other)
     {
         if (other.GetComponent<InventoryHolder>())
         {
+            PlayerMovement.OnInteract += ChestInteracting;
             isActive = true;
             physicalChestRenderer.material = highlightedChestShader;
             Highlight.SetActive(true);
@@ -39,9 +49,16 @@ public class ChestActivate : MonoBehaviour
     {
         if (other.GetComponent<InventoryHolder>())
         {
+            PlayerMovement.OnInteract -= ChestInteracting;
             isActive = false;
             physicalChestRenderer.material = defaultChestShader;
             Highlight.SetActive(false);
         }
+    }
+
+    private void ChestInteracting()
+    {
+        if (isActive)
+            print("Chest is being opened");
     }
 }

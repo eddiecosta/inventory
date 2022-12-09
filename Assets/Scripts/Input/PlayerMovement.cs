@@ -1,4 +1,6 @@
 using UnityEngine;
+using UnityEngine.Events;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using Cinemachine;
 
@@ -14,8 +16,7 @@ public class PlayerMovement : MonoBehaviour
     public float Speed = 2.0f;
     private float turnSpeed;
     private float turnTime = 0.1f;
-
-    private Vector2 moveInput = Vector2.zero;
+    public Vector2 moveInput = Vector2.zero;
 
     [Header("Camera Settings")]
     public Transform camFollow;
@@ -24,7 +25,10 @@ public class PlayerMovement : MonoBehaviour
 
     [Header("World interactive settings")]
     public bool fire;
-    public bool isInteract { get; private set; }
+    public bool isInteracting = false;
+
+    public delegate void IPlayerInteract();
+    public static event IPlayerInteract OnInteract;
 
     [Header("Animator")]
     public Animator Animator;
@@ -32,6 +36,22 @@ public class PlayerMovement : MonoBehaviour
     private void Awake()
     {
         ctrl = new PlayerControls();
+
+
+        // += ctx => Function;
+        // Create Function()
+        ctrl.Player.Movement.performed += ctx => moveInput = ctx.ReadValue<Vector2>();
+        ctrl.Player.Movement.canceled += ctx => moveInput = Vector2.zero;
+
+        ctrl.Player.Interaction.performed += ctx => isInteracting = true;
+        ctrl.Player.Interaction.canceled += ctx => isInteracting = false;
+    }
+
+
+
+    private void Start()
+    {
+        controller = GetComponent<CharacterController>();
     }
 
     private void OnEnable()
@@ -44,12 +64,6 @@ public class PlayerMovement : MonoBehaviour
         ctrl.Disable();    
     }
 
-    private void Start()
-    {
-        controller = GetComponent<CharacterController>();
-
-        ctrl.Player.Movement.started += Movement_started;
-    }
 
     private void Update()
     {
@@ -73,16 +87,17 @@ public class PlayerMovement : MonoBehaviour
         {
             Animator.SetBool("isRunning", false);
         }
+
+        if (isInteracting == true)
+        {
+            if (OnInteract != null)
+                OnInteract();
+            print("is interacting");
+        }
     }
 
-    //void OnMovement(InputValue value)
-    //public void OnMovement(InputAction.CallbackContext context)
+    //private void Movement_started(InputAction.CallbackContext context)
     //{
-    //    moveInput = context.ReadValue<Vector2>();
+        //moveInput = context.ReadValue<Vector2>();
     //}
-
-    private void Movement_started(UnityEngine.InputSystem.InputAction.CallbackContext context)
-    {
-        moveInput = context.ReadValue<Vector2>();
-    }
 }
