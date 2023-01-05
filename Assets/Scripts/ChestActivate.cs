@@ -11,11 +11,14 @@ public class ChestActivate : MonoBehaviour
     public GameObject physicalChest;
     public GameObject Highlight;
     private Renderer physicalChestRenderer;
+    private InventoryHolder thisInventory;
 
     public Material defaultChestShader;
     public Material highlightedChestShader;
     public bool isActive;
 
+
+    private InventoryHolder selectedHolder;
     private void Awake()
     {
         col = GetComponent<BoxCollider>();
@@ -24,24 +27,33 @@ public class ChestActivate : MonoBehaviour
         isActive = false;
         Highlight.SetActive(false);
 
+        thisInventory = GetComponent<InventoryHolder>();
+
     }
 
     private void OnEnable()
     {
+        PlayerActions.OnPressE += ChestInteracting;
     }
 
     private void OnDisable()
     {
+        PlayerActions.OnPressE -= ChestInteracting;
     }
 
     public void OnTriggerEnter(Collider other)
     {
         if (other.GetComponent<InventoryHolder>())
         {
-            PlayerMovement.OnInteract += ChestInteracting;
             isActive = true;
             physicalChestRenderer.material = highlightedChestShader;
             Highlight.SetActive(true);
+
+            selectedHolder = other.GetComponent<InventoryHolder>();
+            //if (other.GetComponent<PlayerMovement>().isInteracting == true)
+            //{
+            //    other.GetComponent<InventoryHolder>().InventorySystem.AddToInventory(thisInventory.InventorySystem.InventorySlots[0].ItemData, 1);
+            //}
         }
     }
 
@@ -49,7 +61,6 @@ public class ChestActivate : MonoBehaviour
     {
         if (other.GetComponent<InventoryHolder>())
         {
-            PlayerMovement.OnInteract -= ChestInteracting;
             isActive = false;
             physicalChestRenderer.material = defaultChestShader;
             Highlight.SetActive(false);
@@ -59,6 +70,10 @@ public class ChestActivate : MonoBehaviour
     private void ChestInteracting()
     {
         if (isActive)
+        {
             print("Chest is being opened");
+            selectedHolder.InventorySystem.AddToInventory(thisInventory.InventorySystem.InventorySlots[0].ItemData, 1);
+        }
+
     }
 }

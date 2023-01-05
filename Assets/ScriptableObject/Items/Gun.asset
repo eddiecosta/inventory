@@ -16,4 +16,4 @@ MonoBehaviour:
   DisplayName: Gun
   Description: Revolver
   Icon: {fileID: 0}
-  MaxStackSize: 0
+  MaxStackSize: 10

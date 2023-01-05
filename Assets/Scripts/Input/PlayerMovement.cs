@@ -27,8 +27,8 @@ public class PlayerMovement : MonoBehaviour
     public bool fire;
     public bool isInteracting = false;
 
-    public delegate void IPlayerInteract();
-    public static event IPlayerInteract OnInteract;
+    //public delegate void IPlayerInteract();
+    //public static event IPlayerInteract OnInteract;
 
     [Header("Animator")]
     public Animator Animator;
@@ -40,11 +40,16 @@ public class PlayerMovement : MonoBehaviour
 
         // += ctx => Function;
         // Create Function()
-        ctrl.Player.Movement.performed += ctx => moveInput = ctx.ReadValue<Vector2>();
-        ctrl.Player.Movement.canceled += ctx => moveInput = Vector2.zero;
+        ctrl.Player.Movement.performed += _ => moveInput = _.ReadValue<Vector2>();
+        ctrl.Player.Movement.canceled += _ => moveInput = Vector2.zero;
 
-        ctrl.Player.Interaction.performed += ctx => isInteracting = true;
-        ctrl.Player.Interaction.canceled += ctx => isInteracting = false;
+        //ctrl.Player.Interaction.performed += ctx => isInteracting = true;
+        //ctrl.Player.Interaction.canceled += ctx => isInteracting = false;
+
+        ctrl.Player.Interaction.performed += _ => PlayerActions.OnPressE();
+
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
 
 
@@ -61,7 +66,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void OnDisable()
     {
-        ctrl.Disable();    
+        ctrl.Disable();
     }
 
 
@@ -88,13 +93,14 @@ public class PlayerMovement : MonoBehaviour
             Animator.SetBool("isRunning", false);
         }
 
-        if (isInteracting == true)
-        {
-            if (OnInteract != null)
-                OnInteract();
-            print("is interacting");
-        }
+        //if (isInteracting == true)
+        //{
+        //    if (OnInteract != null)
+        //        OnInteract();
+        //    print("is interacting");
+        //}
     }
+
 
     //private void Movement_started(InputAction.CallbackContext context)
     //{
