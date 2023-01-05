@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class GenerateChestInventory :MonoBehaviour
+public class GenerateChestInventory : MonoBehaviour
 {
     //public List<InventoryItemData> ItemPooling = new List<InventoryItemData>();
     //public CreateItemList ThisChestInventory;
