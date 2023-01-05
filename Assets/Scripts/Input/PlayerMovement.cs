@@ -18,9 +18,6 @@ public class PlayerMovement : MonoBehaviour
     private float turnTime = 0.1f;
     public Vector2 moveInput = Vector2.zero;
 
-    public float jumpHeight = 3.0f;
-    public bool isJumping = false;
-
     [Header("Camera Settings")]
     public Transform camFollow;
     public Transform camAim;
@@ -30,11 +27,8 @@ public class PlayerMovement : MonoBehaviour
     public bool fire;
     public bool isInteracting = false;
 
-    public delegate void IPlayerInteract();
-    public delegate void IPlayerJump();
-
-    public static event IPlayerInteract OnInteract;
-    public static event IPlayerJump OnJump;
+    //public delegate void IPlayerInteract();
+    //public static event IPlayerInteract OnInteract;
 
     [Header("Animator")]
     public Animator Animator;
@@ -46,14 +40,16 @@ public class PlayerMovement : MonoBehaviour
 
         // += ctx => Function;
         // Create Function()
-        ctrl.Player.Movement.performed += ctx => moveInput = ctx.ReadValue<Vector2>();
-        ctrl.Player.Movement.canceled += ctx => moveInput = Vector2.zero;
+        ctrl.Player.Movement.performed += _ => moveInput = _.ReadValue<Vector2>();
+        ctrl.Player.Movement.canceled += _ => moveInput = Vector2.zero;
 
-        ctrl.Player.Interaction.performed += ctx => OnPlayerInteraction();
-        ctrl.Player.Interaction.canceled += ctx => isInteracting = false;
+        //ctrl.Player.Interaction.performed += ctx => isInteracting = true;
+        //ctrl.Player.Interaction.canceled += ctx => isInteracting = false;
 
-        ctrl.Player.Jump.performed += ctx => OnPlayerJump();
-        ctrl.Player.Jump.canceled += ctx => isJumping = false;
+        ctrl.Player.Interaction.performed += _ => PlayerActions.OnPressE();
+
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
 
 
@@ -70,7 +66,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void OnDisable()
     {
-        ctrl.Disable();    
+        ctrl.Disable();
     }
 
 
@@ -96,27 +92,16 @@ public class PlayerMovement : MonoBehaviour
         {
             Animator.SetBool("isRunning", false);
         }
+
+        //if (isInteracting == true)
+        //{
+        //    if (OnInteract != null)
+        //        OnInteract();
+        //    print("is interacting");
+        //}
     }
 
 
-    public void OnPlayerInteraction()
-    {
-        isInteracting = true;
-        OnInteract?.Invoke();
-        print("The player is trying to interact.");
-    }
-
-    public void OnPlayerJump()
-    {
-        isJumping = true;
-        OnJump?.Invoke();
-        print("Is jumping!");
-
-
-        Vector3 jumpDir = new Vector3(0.0f, jumpHeight, 0.0f);
-
-        controller.Move(jumpDir * Time.deltaTime);
-    }
     //private void Movement_started(InputAction.CallbackContext context)
     //{
         //moveInput = context.ReadValue<Vector2>();

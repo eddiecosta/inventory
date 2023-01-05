@@ -16,4 +16,4 @@ MonoBehaviour:
   DisplayName: Iron
   Description: 
   Icon: {fileID: 0}
-  MaxStackSize: 0
+  MaxStackSize: 10

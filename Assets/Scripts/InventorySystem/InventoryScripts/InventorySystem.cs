@@ -48,6 +48,12 @@ public class InventorySystem
         return false;
     }
 
+    public bool RemoveFromInventory(InventoryItemData itemToRemove, int amountToRemove)
+    {
+
+        return false;
+    }
+
     public bool ContainsItem(InventoryItemData itemToAdd, out List<InventorySlot> invSlot)
     {
         invSlot = InventorySlots.Where(i => i.ItemData == itemToAdd).ToList();
