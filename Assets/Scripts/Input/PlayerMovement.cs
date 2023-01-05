@@ -18,6 +18,9 @@ public class PlayerMovement : MonoBehaviour
     private float turnTime = 0.1f;
     public Vector2 moveInput = Vector2.zero;
 
+    public float jumpHeight = 3.0f;
+    public bool isJumping = false;
+
     [Header("Camera Settings")]
     public Transform camFollow;
     public Transform camAim;
@@ -28,7 +31,10 @@ public class PlayerMovement : MonoBehaviour
     public bool isInteracting = false;
 
     public delegate void IPlayerInteract();
+    public delegate void IPlayerJump();
+
     public static event IPlayerInteract OnInteract;
+    public static event IPlayerJump OnJump;
 
     [Header("Animator")]
     public Animator Animator;
@@ -43,8 +49,11 @@ public class PlayerMovement : MonoBehaviour
         ctrl.Player.Movement.performed += ctx => moveInput = ctx.ReadValue<Vector2>();
         ctrl.Player.Movement.canceled += ctx => moveInput = Vector2.zero;
 
-        ctrl.Player.Interaction.performed += ctx => isInteracting = true;
+        ctrl.Player.Interaction.performed += ctx => OnPlayerInteraction();
         ctrl.Player.Interaction.canceled += ctx => isInteracting = false;
+
+        ctrl.Player.Jump.performed += ctx => OnPlayerJump();
+        ctrl.Player.Jump.canceled += ctx => isJumping = false;
     }
 
 
@@ -87,15 +96,27 @@ public class PlayerMovement : MonoBehaviour
         {
             Animator.SetBool("isRunning", false);
         }
-
-        if (isInteracting == true)
-        {
-            if (OnInteract != null)
-                OnInteract();
-            print("is interacting");
-        }
     }
 
+
+    public void OnPlayerInteraction()
+    {
+        isInteracting = true;
+        OnInteract?.Invoke();
+        print("The player is trying to interact.");
+    }
+
+    public void OnPlayerJump()
+    {
+        isJumping = true;
+        OnJump?.Invoke();
+        print("Is jumping!");
+
+
+        Vector3 jumpDir = new Vector3(0.0f, jumpHeight, 0.0f);
+
+        controller.Move(jumpDir * Time.deltaTime);
+    }
     //private void Movement_started(InputAction.CallbackContext context)
     //{
         //moveInput = context.ReadValue<Vector2>();
