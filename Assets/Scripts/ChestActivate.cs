@@ -50,6 +50,8 @@ public class ChestActivate : MonoBehaviour
             Highlight.SetActive(true);
 
             selectedHolder = other.GetComponent<InventoryHolder>();
+
+
             //if (other.GetComponent<PlayerMovement>().isInteracting == true)
             //{
             //    other.GetComponent<InventoryHolder>().InventorySystem.AddToInventory(thisInventory.InventorySystem.InventorySlots[0].ItemData, 1);

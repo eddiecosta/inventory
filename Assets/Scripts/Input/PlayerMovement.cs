@@ -17,6 +17,13 @@ public class PlayerMovement : MonoBehaviour
     private float turnSpeed;
     private float turnTime = 0.1f;
     public Vector2 moveInput = Vector2.zero;
+    public Vector3 Velocity = Vector3.zero;
+    public float yVelocity;
+
+    public float jumpHeight = 1.0f;
+    public float jumpSpeed = 2.0f;
+    public float Gravity = 1.0f;
+    public float idleGravity = -0.1f;
 
     [Header("Camera Settings")]
     public Transform camFollow;
@@ -26,6 +33,7 @@ public class PlayerMovement : MonoBehaviour
     [Header("World interactive settings")]
     public bool fire;
     public bool isInteracting = false;
+    public bool isJumping = false;
 
     //public delegate void IPlayerInteract();
     //public static event IPlayerInteract OnInteract;
@@ -43,10 +51,11 @@ public class PlayerMovement : MonoBehaviour
         ctrl.Player.Movement.performed += _ => moveInput = _.ReadValue<Vector2>();
         ctrl.Player.Movement.canceled += _ => moveInput = Vector2.zero;
 
-        //ctrl.Player.Interaction.performed += ctx => isInteracting = true;
-        //ctrl.Player.Interaction.canceled += ctx => isInteracting = false;
-
         ctrl.Player.Interaction.performed += _ => PlayerActions.OnPressE();
+        ctrl.Player.Interaction.canceled += _ => isInteracting = false;
+
+        ctrl.Player.Jump.performed += _ => PlayerActions.OnJump();
+        ctrl.Player.Jump.canceled += _ => isJumping = false;
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
@@ -62,6 +71,8 @@ public class PlayerMovement : MonoBehaviour
     private void OnEnable()
     {
         ctrl.Enable();
+        PlayerActions.OnPressE += OnInteract;
+        PlayerActions.OnJump += CanJump;
     }
 
     private void OnDisable()
@@ -76,6 +87,9 @@ public class PlayerMovement : MonoBehaviour
         move = camMain.transform.forward * move.z + camMain.transform.right * move.x;
         move.y = 0.0f;
         move.Normalize();
+
+        move.y = yVelocity;
+
         controller.Move(move * Speed * Time.deltaTime);
 
         if (move.magnitude >= 0.01f)
@@ -93,6 +107,17 @@ public class PlayerMovement : MonoBehaviour
             Animator.SetBool("isRunning", false);
         }
 
+
+        if (isJumping == true)
+        {
+            yVelocity = jumpHeight;            
+        }
+        else
+        {
+            isJumping = false;
+            yVelocity -= 0.1f;
+            yVelocity = Mathf.Clamp(-0.005f, -0.009f, 0.0f);
+        }
         //if (isInteracting == true)
         //{
         //    if (OnInteract != null)
@@ -101,6 +126,22 @@ public class PlayerMovement : MonoBehaviour
         //}
     }
 
+    private void OnInteract()
+    {
+        print("Is trying to interact something.");
+        
+        isInteracting = true;
+    }
+
+    private void CanJump()
+    {
+        print("Jump!");
+        isJumping = true;
+
+        // Jump function
+        //Vector3 jumpDir = new Vector3(this.transform.position.x, jumpHeight, this.transform.position.z);
+        //controller.Move(jumpDir * Time.deltaTime);
+    }
 
     //private void Movement_started(InputAction.CallbackContext context)
     //{

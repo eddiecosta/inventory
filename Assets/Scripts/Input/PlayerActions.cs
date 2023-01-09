@@ -5,14 +5,19 @@ using System;
 
 public static class PlayerActions
 {
-    public static Action OnEnemyKilled;
-    public static Action OnOpenChest;
+
+    /// <summary>
+    /// Collection of possible player interactions events
+    ///     
+    /// </summary>
+
     public static Action OnPressE;
+    public static Action OnJump;
 }
 
 
 
-// Enemy is killed --> PlayerActions.OnenemyKille   d();
+// Enemy is killed --> PlayerActions.OnEnemyKilled();
 
 // Update Score --> OnEnable() PlayerActions.OnEnemyKilled += KilledEnemy;
 //                             KilledEnemy(){ do something; }
