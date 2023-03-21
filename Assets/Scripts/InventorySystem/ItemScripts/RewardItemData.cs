@@ -2,8 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Inventory System/Item")]
-public class ScoreItemData : ScriptableObject
+[CreateAssetMenu(menuName = "Inventory System/Reward Item")]
+public class RewardItemData : ScriptableObject
 {
     public int ID;
     public string DisplayName;

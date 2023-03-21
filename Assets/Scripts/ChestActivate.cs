@@ -9,7 +9,7 @@ public class ChestActivate : MonoBehaviour
     private BoxCollider col;
 
     public GameObject physicalChest;
-    public GameObject Highlight;
+    //public GameObject Highlight;
     private Renderer physicalChestRenderer;
     private InventoryHolder thisInventory;
 
@@ -25,7 +25,7 @@ public class ChestActivate : MonoBehaviour
         physicalChestRenderer = physicalChest.GetComponent<Renderer>();
         col.isTrigger = true;
         isActive = false;
-        Highlight.SetActive(false);
+        //Highlight.SetActive(false);
 
         thisInventory = GetComponent<InventoryHolder>();
 
@@ -47,7 +47,7 @@ public class ChestActivate : MonoBehaviour
         {
             isActive = true;
             physicalChestRenderer.material = highlightedChestShader;
-            Highlight.SetActive(true);
+            //Highlight.SetActive(true);
 
             selectedHolder = other.GetComponent<InventoryHolder>();
 
@@ -65,7 +65,7 @@ public class ChestActivate : MonoBehaviour
         {
             isActive = false;
             physicalChestRenderer.material = defaultChestShader;
-            Highlight.SetActive(false);
+            //Highlight.SetActive(false);
         }
     }
 

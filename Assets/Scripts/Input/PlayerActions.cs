@@ -13,6 +13,8 @@ public static class PlayerActions
 
     public static Action OnPressE;
     public static Action OnJump;
+
+    public static Action OnReward;
 }
 
 

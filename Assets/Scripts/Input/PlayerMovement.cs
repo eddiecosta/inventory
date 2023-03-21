@@ -12,18 +12,20 @@ public class PlayerMovement : MonoBehaviour
     [Header("Movement Settings")]
     private CharacterController controller;
     private PlayerControls ctrl;
+    private BoxCollider playerCol;
 
     public float Speed = 2.0f;
     private float turnSpeed;
     private float turnTime = 0.1f;
     public Vector2 moveInput = Vector2.zero;
     public Vector3 Velocity = Vector3.zero;
-    public float yVelocity;
+    public Vector3 yVelocity;
 
-    public float jumpHeight = 1.0f;
+    public float jumpHeight = 5.0f;
     public float jumpSpeed = 2.0f;
-    public float Gravity = 1.0f;
+    public float Gravity = -9.0f;
     public float idleGravity = -0.1f;
+
 
     [Header("Camera Settings")]
     public Transform camFollow;
@@ -34,6 +36,11 @@ public class PlayerMovement : MonoBehaviour
     public bool fire;
     public bool isInteracting = false;
     public bool isJumping = false;
+    public bool isGrounded = false;
+
+    public Transform groundCheck;
+    private float groundDistance = 0.4f;
+    public LayerMask groundMask;
 
     //public delegate void IPlayerInteract();
     //public static event IPlayerInteract OnInteract;
@@ -44,6 +51,7 @@ public class PlayerMovement : MonoBehaviour
     private void Awake()
     {
         ctrl = new PlayerControls();
+        playerCol = GetComponent<BoxCollider>();
 
 
         // += ctx => Function;
@@ -83,16 +91,14 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
+        GroundCheck();
+
         Vector3 move = new Vector3(moveInput.x, 0.0f, moveInput.y);
         move = camMain.transform.forward * move.z + camMain.transform.right * move.x;
         move.y = 0.0f;
         move.Normalize();
 
-        move.y = yVelocity;
-
-        controller.Move(move * Speed * Time.deltaTime);
-
-        if (move.magnitude >= 0.01f)
+        if (move.magnitude >= 0.1f)
         {
             Animator.SetBool("isRunning", true);
             float targetAngle = Mathf.Atan2(move.x, move.z) * Mathf.Rad2Deg + camFollow.transform.eulerAngles.y;
@@ -100,24 +106,32 @@ public class PlayerMovement : MonoBehaviour
             transform.rotation = Quaternion.Euler(0f, angle, 0f);
 
             Vector3 moveDirection = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward;
-            moveDirection.y = 0;
         }
+
         else
         {
             Animator.SetBool("isRunning", false);
         }
 
 
-        if (isJumping == true)
+
+        controller.Move(move * Speed * Time.deltaTime);
+
+        if (isJumping == true && isGrounded == true)
         {
-            yVelocity = jumpHeight;            
+            yVelocity.y = jumpHeight;
         }
-        else
-        {
-            isJumping = false;
-            yVelocity -= 0.1f;
-            yVelocity = Mathf.Clamp(-0.005f, -0.009f, 0.0f);
-        }
+
+        if (isGrounded == true && isJumping == false)
+            yVelocity.y = Mathf.Clamp(yVelocity.y, -0.1f, -0.09f);
+
+        yVelocity.y += Gravity * Time.deltaTime;
+        yVelocity.y = Mathf.Clamp(yVelocity.y, Gravity, -Gravity);
+        //yVelocity.y = Mathf.Clamp(yVelocity.y, -10.0f, 100.0f);
+
+        controller.Move(yVelocity * Time.deltaTime);
+
+
         //if (isInteracting == true)
         //{
         //    if (OnInteract != null)
@@ -135,7 +149,6 @@ public class PlayerMovement : MonoBehaviour
 
     private void CanJump()
     {
-        print("Jump!");
         isJumping = true;
 
         // Jump function
@@ -143,8 +156,25 @@ public class PlayerMovement : MonoBehaviour
         //controller.Move(jumpDir * Time.deltaTime);
     }
 
+    void GroundCheck()
+    {
+        // Check Ground with spherecast
+
+        Ray checkGround = new Ray(transform.position, -transform.up);
+        RaycastHit hit;
+
+        if (Physics.Raycast(checkGround, out hit, groundDistance))
+        {
+            isGrounded = true;
+        }
+        else
+        {
+            isGrounded = false;
+        }
+    }
+
     //private void Movement_started(InputAction.CallbackContext context)
     //{
-        //moveInput = context.ReadValue<Vector2>();
+    //moveInput = context.ReadValue<Vector2>();
     //}
 }
